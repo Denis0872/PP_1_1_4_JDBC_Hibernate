@@ -13,15 +13,13 @@ import java.util.List;
 public class UserDaoHibernateImpl implements UserDao {
     private final SessionFactory sessionFactory = Util.getConnection();
     public UserDaoHibernateImpl() {
-
     }
-
-
     @Override
     public void createUsersTable() {
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
         try {
+            transaction= session.beginTransaction();
             session.createNativeQuery("CREATE TABLE IF NOT EXISTS maven.users" +
                     " (id mediumint not null auto_increment, name VARCHAR(50), " +
                     "lastname VARCHAR(50), " +
@@ -42,8 +40,9 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void dropUsersTable() {
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
         try {
+            transaction= session.beginTransaction();
             session.createNativeQuery("DROP TABLE IF EXISTS maven.users").executeUpdate();
             transaction.commit();
             System.out.println("Таблица удалена");
@@ -60,8 +59,9 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null; 
         try {
+            transaction= session.beginTransaction();
             session.save(new User(name, lastName, age));
             transaction.commit();
             System.out.println("User  " + name + " добавлен в бд ");
@@ -78,8 +78,9 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
         try {
+            transaction= session.beginTransaction();
             session.delete(session.get(User.class, id));
             transaction.commit();
             System.out.println("пользователь удален");
@@ -116,8 +117,9 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
         try {
+            transaction= session.beginTransaction();
             session.createNativeQuery("TRUNCATE TABLE maven.users;").executeUpdate();
             transaction.commit();
             System.out.println("Таблица пуста");
