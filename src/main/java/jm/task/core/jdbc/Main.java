@@ -28,8 +28,8 @@ public class Main {
         while (iterator.hasNext()){
             System.out.println(iterator.next());
         }
-     //   userService.cleanUsersTable();
-     //   userService.dropUsersTable();
+        userService.cleanUsersTable();
+        userService.dropUsersTable();
 
     }
 }
