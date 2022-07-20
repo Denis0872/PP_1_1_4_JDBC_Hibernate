@@ -6,8 +6,10 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import javax.persistence.criteria.CriteriaQuery;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserDaoHibernateImpl implements UserDao {
@@ -29,9 +31,6 @@ public class UserDaoHibernateImpl implements UserDao {
             System.out.println("Таблица создана");
         } catch (HibernateException e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
         } finally {
             session.close();
         }
@@ -48,9 +47,6 @@ public class UserDaoHibernateImpl implements UserDao {
             System.out.println("Таблица удалена");
         } catch (HibernateException e) {
             e.printStackTrace();
-            if (transaction != null) {
-                transaction.rollback();
-            }
         } finally {
             session.close();
         }
@@ -81,9 +77,19 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try {
             transaction= session.beginTransaction();
-            session.delete(session.get(User.class, id));
+            User user = session.load(User.class, id);
+            try{
+                if (user != null) {
+                    session.delete(user);
+                    System.out.println("пользователь с id: "+id+" удален");
+            }
+            }catch (Exception e){
+               // e.printStackTrace();
+                System.out.println("пользователь с таким id не найден");
+            }
+        //    session.delete(session.get(User.class, id));
             transaction.commit();
-            System.out.println("пользователь удален");
+
         } catch (HibernateException e) {
             e.printStackTrace();
             if (transaction != null) {
@@ -93,22 +99,16 @@ public class UserDaoHibernateImpl implements UserDao {
             session.close();
         }
     }
-
     @Override
     public List<User> getAllUsers() {
-        Session session = sessionFactory.openSession();
-        CriteriaQuery<User> criteriaQuery = session.getCriteriaBuilder().createQuery(User.class);
-        criteriaQuery.from(User.class);
+        List<User> userList = new ArrayList<>();
+        try(Session session = sessionFactory.openSession()) {
         Transaction transaction = session.beginTransaction();
-        List<User> userList = session.createQuery(criteriaQuery).getResultList();
-        try {
-            transaction.commit();
+        userList = session.createQuery("From User ").list();
+        session.getTransaction().commit();
             return userList;
         } catch (HibernateException e) {
             e.printStackTrace();
-            transaction.rollback();
-        } finally {
-            session.close();
         }
         return userList;
 

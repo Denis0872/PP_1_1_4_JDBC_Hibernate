@@ -25,16 +25,17 @@ public class Util {
                     .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
                     .addAnnotatedClass(User.class);
 
-
+            if (sessionFactory == null){
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties()).build();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+            sessionFactory = configuration.buildSessionFactory(serviceRegistry);}
+            else {
+                System.out.println("sessionFactory != null");
+            }
         } catch (HibernateException e) {
             e.printStackTrace();
         }
         return sessionFactory;
     }
-    public static void shutdown(){
-        getConnection().close();
-    }
+
 }
