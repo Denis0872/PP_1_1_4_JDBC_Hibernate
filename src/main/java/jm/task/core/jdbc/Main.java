@@ -24,7 +24,7 @@ public class Main {
         userService.saveUser(user3.getName(), user3.getLastName(), user3.getAge());
         userService.saveUser(user4.getName(), user4.getLastName(), user4.getAge());
         userService.saveUser(user5.getName(), user5.getLastName(), user5.getAge());
-      userService.removeUserById(5);
+      userService.removeUserById(7);
         userList= userService.getAllUsers();
         Iterator<User> iterator= userList.iterator();
         while (iterator.hasNext()){

@@ -69,8 +69,13 @@ public class UserDaoHibernateImpl implements UserDao {
         try(Session session = sessionFactory.openSession()) {
             transaction= session.beginTransaction();
             User user = session.get(User.class, id);
-                    session.delete(user);
-                    System.out.println("пользователь с id: "+id+" удален");
+                    if(user!=null){
+                        session.delete(user);
+                        System.out.println("пользователь с id: "+id+" удален");
+                    }
+                    else {
+                        System.out.println("пользователь с id: "+id+" не существует");
+                    }
         //    session.delete(session.get(User.class, id));
             transaction.commit();
             }
@@ -88,7 +93,6 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = session.beginTransaction();
         userList = session.createQuery("From User ").list();
         session.getTransaction().commit();
-            return userList;
         } catch (HibernateException e) {
             e.printStackTrace();
         }
@@ -101,7 +105,7 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         try(Session session = sessionFactory.openSession()) {
             transaction= session.beginTransaction();
-            session.createNativeQuery("TRUNCATE TABLE maven.users;").executeUpdate();
+            session.createSQLQuery("TRUNCATE TABLE maven.users;").executeUpdate();
             transaction.commit();
             System.out.println("Таблица пуста");
         } catch (HibernateException e) {
