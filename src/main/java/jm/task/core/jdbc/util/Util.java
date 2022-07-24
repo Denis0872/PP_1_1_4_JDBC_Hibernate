@@ -16,25 +16,27 @@ public class Util {
 
     public static SessionFactory getConnection() {
 
-        try {
-            Configuration configuration = new Configuration()
-                    .setProperty("hibernate.connection.driver_class", DRIVER)
-                    .setProperty("hibernate.connection.url", HOST)
-                    .setProperty("hibernate.connection.username", LOGIN)
-                    .setProperty("hibernate.connection.password", PASSWORD)
-                    .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
-                    .addAnnotatedClass(User.class);
+        if (sessionFactory == null) {
+            try {
+                Configuration configuration = new Configuration()
+                        .setProperty("hibernate.connection.driver_class", DRIVER)
+                        .setProperty("hibernate.connection.url", HOST)
+                        .setProperty("hibernate.connection.username", LOGIN)
+                        .setProperty("hibernate.connection.password", PASSWORD)
+                        .setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect")
+                        .addAnnotatedClass(User.class);
 
-            if (sessionFactory == null){
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                    .applySettings(configuration.getProperties()).build();
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);}
-            else {
-                System.out.println("sessionFactory != null");
+                ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                        .applySettings(configuration.getProperties()).build();
+                sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+            } catch (HibernateException e) {
+                e.printStackTrace();
             }
-        } catch (HibernateException e) {
-            e.printStackTrace();
         }
+        else {
+                System.out.println("sessionFactory != null");
+        }
+
         return sessionFactory;
     }
 

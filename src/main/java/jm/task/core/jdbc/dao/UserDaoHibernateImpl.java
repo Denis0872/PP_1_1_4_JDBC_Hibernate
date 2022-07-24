@@ -18,45 +18,39 @@ public class UserDaoHibernateImpl implements UserDao {
     }
     @Override
     public void createUsersTable() {
-        Session session = sessionFactory.openSession();
+
         Transaction transaction = null;
-        try {
+        try(Session session = sessionFactory.openSession()) {
             transaction= session.beginTransaction();
             session.createNativeQuery("CREATE TABLE IF NOT EXISTS maven.users" +
-                    " (id mediumint not null auto_increment, name VARCHAR(50), " +
+                    " (id int not null auto_increment, name VARCHAR(50), " +
                     "lastname VARCHAR(50), " +
-                    "age tinyint, " +
+                    "age int, " +
                     "PRIMARY KEY (id))").executeUpdate();
             transaction.commit();
             System.out.println("Таблица создана");
         } catch (HibernateException e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
 
     @Override
     public void dropUsersTable() {
-        Session session = sessionFactory.openSession();
         Transaction transaction = null;
-        try {
+        try(Session session = sessionFactory.openSession()) {
             transaction= session.beginTransaction();
             session.createNativeQuery("DROP TABLE IF EXISTS maven.users").executeUpdate();
             transaction.commit();
             System.out.println("Таблица удалена");
         } catch (HibernateException e) {
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Session session = sessionFactory.openSession();
         Transaction transaction = null; 
-        try {
+        try(Session session = sessionFactory.openSession()) {
             transaction= session.beginTransaction();
             session.save(new User(name, lastName, age));
             transaction.commit();
@@ -66,37 +60,25 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            session.close();
         }
     }
 
     @Override
     public void removeUserById(long id) {
-        Session session = sessionFactory.openSession();
         Transaction transaction = null;
-        try {
+        try(Session session = sessionFactory.openSession()) {
             transaction= session.beginTransaction();
             User user = session.load(User.class, id);
-            try{
-                if (user != null) {
                     session.delete(user);
                     System.out.println("пользователь с id: "+id+" удален");
-            }
-            }catch (Exception e){
-               // e.printStackTrace();
-                System.out.println("пользователь с таким id не найден");
-            }
         //    session.delete(session.get(User.class, id));
             transaction.commit();
-
-        } catch (HibernateException e) {
+            }
+        catch (HibernateException e) {
             e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            session.close();
         }
     }
     @Override
@@ -116,9 +98,8 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        Session session = sessionFactory.openSession();
         Transaction transaction = null;
-        try {
+        try(Session session = sessionFactory.openSession()) {
             transaction= session.beginTransaction();
             session.createNativeQuery("TRUNCATE TABLE maven.users;").executeUpdate();
             transaction.commit();
@@ -128,9 +109,6 @@ public class UserDaoHibernateImpl implements UserDao {
             if (transaction != null) {
                 transaction.rollback();
             }
-        } finally {
-            session.close();
         }
-
     }
 }
