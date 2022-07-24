@@ -1,8 +1,6 @@
 package jm.task.core.jdbc.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import net.bytebuddy.dynamic.loading.InjectionClassLoader;
 //import org.hibernate.annotations.Entity;
 import javax.persistence.Entity;
@@ -14,20 +12,23 @@ import java.io.Serializable;
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User implements Serializable {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
+    @NonNull
     private String name;
-
+    @NonNull
     private String lastName;
-
-
+    @NonNull
     private Byte age;
 
-    public User() {
-    }
+//    public User() {
+//    }
 //    @Override
 //    public String toString() {
 //        return
@@ -39,11 +40,11 @@ public class User implements Serializable {
 //                        '}';
 //    }
 
-    public User(String name, String lastName, Byte age) {
-        this.name = name;
-        this.lastName = lastName;
-        this.age = age;
-    }
+//    public User(String name, String lastName, Byte age) {
+//        this.name = name;
+//        this.lastName = lastName;
+//        this.age = age;
+//    }
 
 //    public Long getId() {
 //        return id;
