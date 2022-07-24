@@ -10,11 +10,11 @@ import java.util.logging.Level;
 
 public class Main {
     static UserService userService = new UserServiceImpl();
-    static User user1 = new User("Vasya", "Pupkin", (byte) 15);
-    static User user2 = new User("Petr", "Petkin", (byte) 18);
-    static User user3 = new User("Masha", "Mashkina", (byte) 21);
-    static  User user4 = new User("Don", "Karleone", (byte) 88);
-    static  User user5 = new User("Mister", "Bin", (byte) 55);
+    private static User user1 = new User("Vasya", "Pupkin", (byte) 15);
+    private static User user2 = new User("Petr", "Petkin", (byte) 18);
+    private static User user3 = new User("Masha", "Mashkina", (byte) 21);
+    private static  User user4 = new User("Don", "Karleone", (byte) 88);
+    private static  User user5 = new User("Mister", "Bin", (byte) 55);
     public static void main(String[] args) {
 
          List<User> userList;
@@ -24,7 +24,7 @@ public class Main {
         userService.saveUser(user3.getName(), user3.getLastName(), user3.getAge());
         userService.saveUser(user4.getName(), user4.getLastName(), user4.getAge());
         userService.saveUser(user5.getName(), user5.getLastName(), user5.getAge());
-      userService.removeUserById(4);
+      userService.removeUserById(5);
         userList= userService.getAllUsers();
         Iterator<User> iterator= userList.iterator();
         while (iterator.hasNext()){
